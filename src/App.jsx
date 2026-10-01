@@ -4,7 +4,7 @@ import Header from './components/Header';
 import DanhSachMon from './components/DanhSachMon';
 import GioHang from './components/GioHang';
 import Khung from './components/Khung';
-import FormDatMon from './components/FormDatMon'; // Uncomment
+import FormDatMon from './components/FormDatMon';
 import dsMonData from './data/dsMon';
 import useLocalStorage from './hooks/useLocalStorage';
 
@@ -38,7 +38,16 @@ export default function App() {
     });
   };
 
-  // Hàm xử lý khi gửi đơn hàng thành công (Câu 4)
+  // Hàm xóa 1 món khỏi giỏ hàng
+  const xoaMon = (id) => {
+    setGio((prevGio) => prevGio.filter((item) => String(item.id) !== String(id)));
+  };
+
+  // Hàm xóa toàn bộ giỏ hàng
+  const xoaTatCa = () => {
+    setGio([]);
+  };
+
   const handleGuiDon = (thongTinNguoiNhan) => {
     if (gio.length === 0) {
       alert('Giỏ hàng đang trống! Vui lòng chọn món trước khi đặt.');
@@ -52,7 +61,7 @@ export default function App() {
     });
 
     alert('Đặt hàng thành công! Cảm ơn bạn.');
-    setGio([]); // Xóa sạch giỏ hàng sau khi đặt thành công
+    setGio([]);
   };
 
   return (
@@ -69,7 +78,11 @@ export default function App() {
         
         <aside className="sidebar">
           <Khung tieuDe="Giỏ hàng">
-            <GioHang gio={gio} dsMon={dsMonData} />
+            <GioHang 
+              gio={gio} 
+              onXoaMon={xoaMon} 
+              onXoaTatCa={xoaTatCa} 
+            />
           </Khung>
 
           <Khung tieuDe="Thông tin giao hàng">
