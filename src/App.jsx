@@ -4,6 +4,7 @@ import Header from './components/Header';
 import DanhSachMon from './components/DanhSachMon';
 import GioHang from './components/GioHang';
 import Khung from './components/Khung';
+import FormDatMon from './components/FormDatMon'; // Uncomment
 import dsMonData from './data/dsMon';
 import useLocalStorage from './hooks/useLocalStorage';
 
@@ -23,21 +24,36 @@ export default function App() {
   }, [tongPhan, tenQuan]);
 
   const datMon = (id) => {
-  setGio((prevGio) => {
-    // Tìm xem món đã có trong giỏ chưa
-    const tonTai = prevGio.find((mon) => String(mon.id) === String(id));
+    setGio((prevGio) => {
+      const tonTai = prevGio.find((mon) => String(mon.id) === String(id));
+      if (tonTai) {
+        return prevGio.map((mon) =>
+          String(mon.id) === String(id) ? { ...mon, soLuong: mon.soLuong + 1 } : mon
+        );
+      } else {
+        const monMoi = dsMonData.find((mon) => String(mon.id) === String(id));
+        if (!monMoi) return prevGio;
+        return [...prevGio, { ...monMoi, soLuong: 1 }];
+      }
+    });
+  };
 
-    if (tonTai) {
-      return prevGio.map((mon) =>
-        String(mon.id) === String(id) ? { ...mon, soLuong: mon.soLuong + 1 } : mon
-      );
-    } else {
-      const monMoi = dsMonData.find((mon) => String(mon.id) === String(id));
-      if (!monMoi) return prevGio; // Phòng trường hợp không tìm thấy món
-      return [...prevGio, { ...monMoi, soLuong: 1 }];
+  // Hàm xử lý khi gửi đơn hàng thành công (Câu 4)
+  const handleGuiDon = (thongTinNguoiNhan) => {
+    if (gio.length === 0) {
+      alert('Giỏ hàng đang trống! Vui lòng chọn món trước khi đặt.');
+      return;
     }
-  });
-};
+
+    console.log('Đơn hàng đã đặt thành công:', {
+      nguoiNhan: thongTinNguoiNhan,
+      chiTietGioHang: gio,
+      tongTien: gio.reduce((sum, item) => sum + item.gia * item.soLuong, 0)
+    });
+
+    alert('Đặt hàng thành công! Cảm ơn bạn.');
+    setGio([]); // Xóa sạch giỏ hàng sau khi đặt thành công
+  };
 
   return (
     <div className="app-container">
@@ -54,6 +70,10 @@ export default function App() {
         <aside className="sidebar">
           <Khung tieuDe="Giỏ hàng">
             <GioHang gio={gio} dsMon={dsMonData} />
+          </Khung>
+
+          <Khung tieuDe="Thông tin giao hàng">
+            <FormDatMon onGuiDon={handleGuiDon} />
           </Khung>
         </aside>
       </main>
