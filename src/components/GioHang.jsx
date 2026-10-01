@@ -1,31 +1,25 @@
-import { dinhDangGia } from '../utils/formatters';
+export default function GioHang({ gio }) {
+  // Tính tổng tiền của giỏ hàng
+  const tongTien = gio.reduce((sum, item) => sum + item.gia * item.soLuong, 0);
 
-export default function GioHang({ gio, dsMon }) {
-  if (!gio || gio.length === 0) {
-    return (
-      <div data-testid="gio-hang">
-        <p>Giỏ hàng trống</p>
-      </div>
-    );
+  if (gio.length === 0) {
+    return <p>Giỏ hàng đang trống.</p>;
   }
 
   return (
-    <div data-testid="gio-hang">
-      <ul>
-        {gio.map((item) => {
-          // Lấy món ăn từ dsMon dựa trên id hoặc item đã có sẵn gia
-          const monInfo = dsMon ? dsMon.find((m) => m.id === item.id) : item;
-          const giaMon = monInfo ? monInfo.gia : item.gia || 0;
-          const tenMon = monInfo ? monInfo.ten : item.ten || '';
-          const thanhTien = giaMon * item.soLuong;
-
-          return (
-            <li key={item.id} style={{ marginBottom: '8px' }}>
-              {tenMon} x {item.soLuong} - {dinhDangGia(thanhTien)}
-            </li>
-          );
-        })}
+    <div className="gio-hang">
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {gio.map((item) => (
+          <li key={item.id} style={{ marginBottom: '8px' }}>
+            {/* Sử dụng item.ten thay vì tenMon */}
+            <strong>{item.ten}</strong> - {item.soLuong} phần ({(item.gia * item.soLuong).toLocaleString()} đ)
+          </li>
+        ))}
       </ul>
+      <hr />
+      <p style={{ fontWeight: 'bold' }}>
+        Tổng tiền: {tongTien.toLocaleString()} đ
+      </p>
     </div>
   );
 }
