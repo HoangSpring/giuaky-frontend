@@ -7,4 +7,5 @@ const dsMon = [
     { id: 'm6', ten: 'Cơm hến', gia: 25000, moTa: 'Cơm hến với nhân hến và rau sống, ăn kèm nước mắm.', daHet: false },
     { id: 'm7', ten: 'Chè bưởi', gia: 20000, moTa: 'Chè bưởi với bưởi tươi và sữa đặc, ăn kèm nước mắm.', daHet: false },
     { id: 'm8', ten: 'Bánh bột lọc', gia: 30000, moTa: 'Bánh bột lọc với nhân tôm và thịt, ăn kèm nước mắm.', daHet: false },
-]
+];
+export default dsMon;

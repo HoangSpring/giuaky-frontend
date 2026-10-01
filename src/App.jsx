@@ -1,122 +1,49 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css'; // Nhớ import CSS để hiển thị giao diện đẹp
+import Header from './components/Header';
+import DanhSachMon from './components/DanhSachMon';
+import GioHang from './components/GioHang';
+import Khung from './components/Khung';
+import dsMonData from './data/dsMon';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [gio, setGio] = useState([]);
+  const [idDangChon, setIdDangChon] = useState(null);
+
+  // Đổi tên thành datMon (chữ M viết hoa)
+  const datMon = (id) => {
+    setGio((prevGio) => {
+      const tonTai = prevGio.find((mon) => mon.id === id);
+      if (tonTai) {
+        return prevGio.map((mon) =>
+          mon.id === id ? { ...mon, soLuong: mon.soLuong + 1 } : mon
+        );
+      } else {
+        const monMoi = dsMonData.find((mon) => mon.id === id);
+        return [...prevGio, { ...monMoi, soLuong: 1 }];
+      }
+    });
+  };
+
+  // Đổi tên thành tongPhan (chữ P viết hoa)
+  const tongPhan = gio.reduce((tong, mon) => tong + mon.soLuong, 0);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="app-container">
+      <Header tongPhan={tongPhan} />
+      <main className="main-content">
+        <DanhSachMon
+          dsMon={dsMonData}
+          idDangChon={idDangChon}
+          onChon={(id) => setIdDangChon(id)}
+          onDat={datMon}
+        />
+        <aside className="sidebar">
+          <Khung tieuDe="Giỏ hàng">
+            <GioHang gio={gio} dsMon={dsMonData} />
+          </Khung>
+        </aside>
+      </main>
+    </div>
+  );
 }
-
-export default App
