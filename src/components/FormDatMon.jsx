@@ -49,6 +49,12 @@ export default function FormDatMon({ onGuiDon }) {
                     style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }}
                     />
             </div>
+            <button
+                type="submit"
+                style={{ background: '#4CAF50', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}
+            >
+                Gửi đơn
+            </button>
         </form>
     );
 }
